@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Laporan Harian Lapangan</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c8102e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--tx:#1b1f24;--mut:#667085;--bd:#d5d9e0;--ac:#c8102e;--acx:#fff;--ok:#1a7f4b;--rain:#1f5fbf;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14161a;--card:#1e2126;--tx:#eceff3;--mut:#98a2b3;--bd:#3a3f47;--ok:#4cc38a;--rain:#6ea8ff}}
+:root[data-theme="dark"]{--bg:#14161a;--card:#1e2126;--tx:#eceff3;--mut:#98a2b3;--bd:#3a3f47;--ok:#4cc38a;--rain:#6ea8ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:640px;margin:0 auto;padding:12px 12px 90px}
+h1{font-size:20px;margin:6px 0 2px}
+.sub{color:var(--mut);font-size:13px;margin-bottom:10px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:12px}
+.card h2{font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);margin:0 0 8px;display:flex;justify-content:space-between;align-items:center}
+label{display:block;font-size:12px;color:var(--mut);margin:8px 0 3px}
+input[type=text],input[type=date],input[type=number]{width:100%;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+.row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.row .n{width:84px;flex:none;text-align:center}
+.row .x{flex:none;width:38px;height:38px;border-radius:8px;border:1px solid var(--bd);background:none;color:var(--mut);font-size:18px}
+button{font:inherit;cursor:pointer}
+.btn{padding:11px 14px;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font-weight:600}
+.btn.p{background:var(--ac);color:var(--acx);border-color:var(--ac)}
+.btn.s{padding:7px 10px;font-size:13px}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btns .btn{flex:1;min-width:130px}
+.tot{text-align:right;font-weight:700;margin-top:4px}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;padding:10px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font-weight:600}
+.seg button.on.c{background:var(--ok);color:#fff;border-color:var(--ok)}
+.seg button.on.h{background:var(--rain);color:#fff;border-color:var(--rain)}
+.ph{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.ph div{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;border:1px solid var(--bd)}
+.ph img{width:100%;height:100%;object-fit:cover}
+.ph button{position:absolute;top:3px;right:3px;width:26px;height:26px;border-radius:50%;border:0;background:rgba(0,0,0,.65);color:#fff}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--bd);padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px))}
+.bar .in{max-width:640px;margin:0 auto;display:flex;gap:8px}
+.bar .btn{flex:1}
+.hist{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--bd);font-size:14px}
+.hist:first-of-type{border-top:0}
+.hist small{color:var(--mut)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:84px;background:#222;color:#fff;padding:9px 14px;border-radius:10px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;max-width:90%;text-align:center}
+.toast.on{opacity:1}
+details summary{cursor:pointer;font-weight:600}
+.sig img{max-height:60px;background:#fff;border:1px solid var(--bd);border-radius:6px;margin-top:6px}
+.modal{position:fixed;inset:0;z-index:50;background:var(--bg);display:none;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+.modal.on{display:flex}
+.modal .top{display:flex;gap:8px;align-items:center;padding:8px 12px;background:var(--card);border-bottom:1px solid var(--bd)}
+.modal .top b{flex:1}
+.modal .bd{flex:1;overflow:auto;padding:10px 8px calc(16px + env(safe-area-inset-bottom,0px))}
+.pv{max-width:760px;margin:0 auto}
+.pv table{border-collapse:collapse;width:100%;table-layout:fixed;font-size:11px;background:#fff;color:#000}
+.pv td{border:1px solid #000;padding:3px 5px;vertical-align:middle;word-break:break-word;height:20px}
+.pv .c{text-align:center}.pv .b{font-weight:700}.pv .u{text-decoration:underline;border:0}
+.pv .ph2{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;padding:5px}
+.pv .ph2 img{display:block}
+.pv .sg{height:64px}.pv .sg img{height:60px}
+.seg.per button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:8px 0}
+.pbox{border:1px solid var(--bd);border-radius:10px;padding:8px;text-align:center}
+.pbox b{display:block;font-size:20px}.pbox span{font-size:12px;color:var(--mut)}
+.ptab{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+.ptab td,.ptab th{padding:5px 4px;border-top:1px solid var(--bd);text-align:left}
+.ptab th{color:var(--mut);font-weight:600}.ptab td:nth-child(n+2),.ptab th:nth-child(n+2){text-align:right}
+</style>
+</head>
+<body>
+<main>
+  <h1>Laporan Harian Lapangan</h1>
+  <div class="sub">Foto, isi aktivitas, pilih cuaca, lalu unduh Excel.</div>
+
+  <div class="card" style="display:flex;gap:8px;align-items:center;justify-content:space-between"><div style="min-width:0"><b>☁️ Google Drive</b><div id="topStat" style="font-size:12px;color:var(--mut);overflow-wrap:anywhere"></div></div><button class="btn s" id="topSync" style="flex:none">🔄 Sinkron</button></div>
+
+  <div class="card">
+    <h2>Laporan hari ini <button class="btn s" id="btnNew">Laporan baru</button></h2>
+    <label>Tanggal</label><input type="date" id="date">
+    <label>No. SPK</label><input type="text" id="spk">
+  </div>
+
+  <div class="card">
+    <h2>Aktivitas pekerjaan <button class="btn s" id="btnCopy">Salin dari terakhir</button></h2>
+    <div id="acts"></div>
+    <button class="btn s" id="addAct">+ Tambah aktivitas</button>
+    <div class="tot">Jumlah pekerja: <span id="tot">0</span> orang</div>
+  </div>
+
+  <div class="card">
+    <h2>Foto lapangan</h2>
+    <div class="btns">
+      <button class="btn p" id="cam">📷 Ambil foto</button>
+      <button class="btn" id="gal">🖼️ Dari galeri</button>
+    </div>
+    <input type="file" id="fcam" accept="image/*" capture="environment" hidden>
+    <input type="file" id="fgal" accept="image/*" multiple hidden>
+    <div class="ph" id="ph"></div>
+  </div>
+
+  <div class="card">
+    <h2>Catatan kendala (cuaca)</h2>
+    <label>Catatan tambahan (opsional)</label><input type="text" id="note" placeholder="mis. hujan deras jam 14.00, pekerjaan berhenti">
+    <label>Pagi – Siang</label>
+    <div class="seg" data-k="pagi"><button class="c" data-v="cerah">☀️ Cerah</button><button class="h" data-v="hujan">🌧️ Hujan</button></div>
+    <label>Siang – Sore</label>
+    <div class="seg" data-k="sore"><button class="c" data-v="cerah">☀️ Cerah</button><button class="h" data-v="hujan">🌧️ Hujan</button></div>
+  </div>
+
+  <div class="card">
+    <details>
+      <summary>Pengaturan tetap (proyek, kontraktor, tanda tangan)</summary>
+      <label>Project</label><input type="text" data-s="project">
+      <label>Pekerjaan</label><input type="text" data-s="pekerjaan">
+      <label>Blok</label><input type="text" data-s="blok">
+      <label>Lokasi</label><input type="text" data-s="lokasi">
+      <label>Kontraktor</label><input type="text" data-s="kontraktor">
+      <label>Nama (kontraktor)</label><input type="text" data-s="knama">
+      <label>Posisi</label><input type="text" data-s="kposisi">
+      <label>Perusahaan</label><input type="text" data-s="kperusahaan">
+      <label>Dibuat oleh – nama</label><input type="text" data-s="dnama">
+      <label>Dibuat oleh – jabatan</label><input type="text" data-s="djabatan">
+      <label>Diketahui – nama 1</label><input type="text" data-s="k1nama">
+      <label>Diketahui – jabatan 1</label><input type="text" data-s="k1jabatan">
+      <label>Diketahui – nama 2</label><input type="text" data-s="k2nama">
+      <label>Diketahui – jabatan 2</label><input type="text" data-s="k2jabatan">
+      <label>Tanda tangan (unggah sekali, tersimpan di HP)</label>
+      <div class="btns"><button class="btn s" id="sigBtn">Pilih gambar tanda tangan</button><button class="btn s" id="sigDel">Hapus</button></div>
+      <input type="file" id="fsig" accept="image/*" hidden>
+      <div class="sig" id="sigPrev"></div>
+    </details>
+  </div>
+
+  <div class="card">
+    <h2>Rekap tersimpan <span id="cnt"></span></h2>
+    <div id="per" style="padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid var(--bd)">
+      <b>📅 Rekap otomatis</b> <small style="color:var(--mut)">(dari laporan yang sudah disimpan)</small>
+      <div class="seg per" style="margin:8px 0"><button id="perW">Mingguan</button><button id="perM">Bulanan</button></div>
+      <div class="row" style="justify-content:space-between;margin-bottom:4px"><button class="btn s" id="perPrev" aria-label="Sebelumnya">‹</button><b id="perLbl"></b><button class="btn s" id="perNext" aria-label="Berikutnya">›</button></div>
+      <div id="perSum"></div>
+      <button class="btn" id="perDl" style="width:100%;margin-top:8px">⬇️ Unduh rekap periode ini (Excel)</button>
+    </div>
+    <div id="hist"></div>
+    <div id="drv" style="border-top:1px solid var(--bd);margin-top:10px;padding-top:10px">
+      <b>☁️ Google Drive</b> <small style="color:var(--mut)">(folder “Laporan Harian S Walk”)</small>
+      <label>Google Client ID (isi sekali, lihat README)</label><input type="text" id="cid" placeholder="xxxx.apps.googleusercontent.com" autocomplete="off">
+      <label style="display:flex;gap:8px;align-items:center;margin:8px 0;color:var(--tx);font-size:14px"><input type="checkbox" id="auto"> Sinkron otomatis ke Drive saat tekan “Simpan” dan saat aplikasi dibuka</label>
+      <div class="btns"><button class="btn" id="drvSave">☁️ Simpan + Excel</button><button class="btn" id="drvLoad">🔄 Sinkron</button><button class="btn" id="drvRekap">📊 Unggah rekap</button></div>
+      <div id="drvStat" style="font-size:13px;color:var(--mut);margin-top:8px"></div>
+    </div>
+    <div class="btns" style="margin-top:8px"><button class="btn" id="dlRekap">⬇️ Unduh rekap semua (Excel)</button></div>
+  </div>
+</main>
+
+<div class="bar"><div class="in">
+  <button class="btn" id="save">💾 Simpan</button>
+  <button class="btn" id="pvBtn">👁️ Preview</button>
+  <button class="btn p" id="dl">⬇️ Excel</button>
+</div></div>
+<div class="modal" id="modal"><div class="top"><b>Preview laporan</b><button class="btn s" id="pvClose">Tutup</button><button class="btn s p" id="pvDl">⬇️ Unduh Excel</button></div><div class="bd"><div class="pv" id="pv"></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+const $=s=>document.querySelector(s);
+const DEF={project:'S WALK',pekerjaan:'RUKO',blok:'A No. 06 - No. 18',lokasi:'Batam Center',kontraktor:'PT. BOYAN MARINA GEMILANG',knama:'Husin',kposisi:'Pemborong',kperusahaan:'PT. BOYAN MARINA GEMILANG',dnama:'Farhan Rizky',djabatan:'Project Officer',k1nama:'M Nuzuul',k1jabatan:'Kadiv',k2nama:'Lili Hadi',k2jabatan:'Direktur'};
+// ---- penyimpanan lokal: IndexedDB dimuat ke memori, tulis tertunda; cadangan localStorage ----
+const mem={},pend=new Map();let idb=null,storeFail=false,flushT=null;
+const store={
+  get(k,d){return (k in mem&&mem[k]!==undefined)?mem[k]:d},
+  set(k,v){mem[k]=v;pend.set(k,v);if(!flushT)flushT=setTimeout(flush,300);return !storeFail},
+  del(k){delete mem[k];pend.set(k,undefined);if(!flushT)flushT=setTimeout(flush,300)}
+};
+function openIdb(){return new Promise(res=>{try{if(!window.indexedDB)return res(null);const q=indexedDB.open('lh_db',1);q.onupgradeneeded=()=>q.result.createObjectStore('kv');q.onsuccess=()=>res(q.result);q.onerror=()=>res(null);q.onblocked=()=>res(null)}catch(e){res(null)}})}
+function idbAll(db){return new Promise(res=>{const out={};try{const tx=db.transaction('kv');const c=tx.objectStore('kv').openCursor();c.onsuccess=()=>{const x=c.result;if(x){out[x.key]=x.value;x.continue()}};tx.oncomplete=()=>res(out);tx.onerror=tx.onabort=()=>res(out)}catch(e){res(out)}})}
+function flush(){
+  clearTimeout(flushT);flushT=null;
+  const items=[...pend];pend.clear();
+  if(!items.length)return Promise.resolve(true);
+  const full=()=>{storeFail=true;toast('Memori HP penuh. Unduh rekap atau sinkron ke Drive.')};
+  if(!idb){
+    let ok=true;
+    items.forEach(([k,v])=>{try{if(v===undefined)localStorage.removeItem(k);else localStorage.setItem(k,JSON.stringify(v))}catch(e){ok=false}});
+    if(ok)storeFail=false;else full();
+    return Promise.resolve(ok);
+  }
+  return new Promise(res=>{
+    try{
+      const tx=idb.transaction('kv','readwrite'),os=tx.objectStore('kv');
+      items.forEach(([k,v])=>v===undefined?os.delete(k):os.put(v,k));
+      tx.oncomplete=()=>{storeFail=false;res(true)};
+      tx.onerror=tx.onabort=()=>{full();res(false)};
+    }catch(e){full();res(false)}
+  });
+}
+addEventListener('pagehide',()=>{if(flushT)flush()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&flushT)flush()});
+async function loadStore(){
+  idb=await openIdb();
+  const all=idb?await idbAll(idb):{};
+  const migrated=[];
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i);
+      if(k&&k.indexOf('lh_')===0&&!(k in all)){try{all[k]=JSON.parse(localStorage.getItem(k));migrated.push(k);if(idb)pend.set(k,all[k])}catch(e){}}
+    }
+  }catch(e){}
+  Object.assign(mem,all);
+  if(idb&&migrated.length){const ok=await flush();if(ok)migrated.forEach(k=>{try{localStorage.removeItem(k)}catch(e){}})}
+  try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
+}
+
+const today=()=>{const d=new Date();return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
+const blank=()=>({date:today(),spk:store.get('lh_spk','013/SW/SPK/SGD/VIII/2025'),acts:[{t:'',n:''}],photos:[],note:'',pagi:'cerah',sore:'cerah'});
+let st=Object.assign({},DEF),sig=null,sigDim=null,hist={},rep=blank();
+function loadSigDim(){
+  return new Promise(res=>{
+    if(!sig){sigDim=null;return res()}
+    const i=new Image();i.onload=()=>{sigDim={w:i.width,h:i.height};res()};i.onerror=()=>{sigDim=null;res()};i.src=sig;
+  });
+}
+
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),2200)}
+function persist(){store.set('lh_draft',{...rep,photos:rep.photos});store.set('lh_spk',rep.spk)}
+function total(){return rep.acts.reduce((a,x)=>a+(parseInt(x.n)||0),0)}
+
+function renderActs(){
+  const box=$('#acts');box.innerHTML='';
+  rep.acts.forEach((a,i)=>{
+    const r=document.createElement('div');r.className='row';
+    const t=document.createElement('input');t.type='text';t.placeholder='Aktivitas, mis. Pek. Pembesian';t.value=a.t;
+    t.oninput=()=>{a.t=t.value;persist()};
+    const n=document.createElement('input');n.type='number';n.inputMode='numeric';n.min='0';n.placeholder='Orang';n.className='n';n.value=a.n;
+    n.oninput=()=>{a.n=n.value;$('#tot').textContent=total();persist()};
+    const x=document.createElement('button');x.className='x';x.textContent='×';x.setAttribute('aria-label','Hapus');
+    x.onclick=()=>{rep.acts.splice(i,1);if(!rep.acts.length)rep.acts.push({t:'',n:''});renderActs();persist()};
+    r.append(t,n,x);box.append(r);
+  });
+  $('#tot').textContent=total();
+}
+function renderPhotos(){
+  const p=$('#ph');p.innerHTML='';
+  rep.photos.forEach((ph,i)=>{
+    const d=document.createElement('div');const im=document.createElement('img');im.src=ph.d;
+    const b=document.createElement('button');b.textContent='×';b.setAttribute('aria-label','Hapus foto');
+    b.onclick=()=>{rep.photos.splice(i,1);renderPhotos();persist()};
+    d.append(im,b);p.append(d);
+  });
+}
+function renderWeather(){
+  document.querySelectorAll('.seg').forEach(s=>{
+    s.querySelectorAll('button').forEach(b=>b.classList.toggle('on',rep[s.dataset.k]===b.dataset.v));
+  });
+}
+function fmtLong(d){const dt=new Date(d+'T00:00:00');const H=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return {hari:H[dt.getDay()],tgl:String(dt.getDate()).padStart(2,'0')+'-'+M[dt.getMonth()]+'-'+String(dt.getFullYear()).slice(2),dmy:String(dt.getDate()).padStart(2,'0')+'/'+String(dt.getMonth()+1).padStart(2,'0')+'/'+dt.getFullYear()}}
+function renderHist(){
+  const keys=Object.keys(hist).sort().reverse();
+  $('#cnt').textContent=keys.length+' hari';renderPer();
+  const h=$('#hist');h.innerHTML=keys.length?'':'<small style="color:var(--mut)">Belum ada laporan tersimpan.</small>';
+  keys.forEach(k=>{
+    const r=hist[k];const f=fmtLong(k);
+    const d=document.createElement('div');d.className='hist';
+    d.innerHTML='<div><b>'+f.hari+', '+f.tgl+'</b><br><small>'+r.acts.filter(a=>a.t).length+' aktivitas · '+r.acts.reduce((a,x)=>a+(parseInt(x.n)||0),0)+' pekerja · '+r.photos.length+' foto</small></div>';
+    const b=document.createElement('div');b.className='btns';b.style.flex='none';
+    const e=document.createElement('button');e.className='btn s';e.textContent='Buka';e.style.minWidth='0';
+    e.onclick=()=>{rep=JSON.parse(JSON.stringify(r));init();persist();window.scrollTo(0,0);toast('Laporan dibuka')};
+    const x=document.createElement('button');x.className='btn s';x.textContent='Hapus';x.style.minWidth='0';
+    x.onclick=()=>{if(confirm('Hapus laporan '+f.tgl+' dari rekap'+(getCid()?' dan dari Google Drive':'')+'?')){delete hist[k];store.set('lh_hist',hist);const D=store.get('lh_del',{});D[k]=Date.now();store.set('lh_del',D);const M=store.get('lh_sync',{});delete M[k];store.set('lh_sync',M);renderHist();if(getCid())runDrive(()=>syncCore(true))}};
+    b.append(e,x);d.append(b);h.append(d);
+  });
+}
+function renderSig(){$('#sigPrev').innerHTML=sig?'<img src="'+sig+'" alt="Tanda tangan">':'<small style="color:var(--mut)">Belum ada tanda tangan.</small>'}
+function init(){
+  $('#date').value=rep.date;$('#spk').value=rep.spk;$('#note').value=rep.note||'';
+  document.querySelectorAll('[data-s]').forEach(i=>i.value=st[i.dataset.s]);
+  renderActs();renderPhotos();renderWeather();renderSig();renderHist();
+}
+
+// image handling
+function shrink(file,max=1100,q=.72){
+  return new Promise((res,rej)=>{
+    const u=URL.createObjectURL(file);const im=new Image();
+    im.onload=()=>{const s=Math.min(1,max/Math.max(im.width,im.height));const w=Math.round(im.width*s),h=Math.round(im.height*s);
+      const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,w,h);x.drawImage(im,0,0,w,h);
+      URL.revokeObjectURL(u);res({d:c.toDataURL('image/jpeg',q),w,h})};
+    im.onerror=()=>{URL.revokeObjectURL(u);rej()};im.src=u;
+  });
+}
+async function addFiles(files){
+  for(const f of files){try{rep.photos.push(await shrink(f))}catch(e){toast('Foto gagal dibaca')}}
+  renderPhotos();persist();
+}
+$('#cam').onclick=()=>$('#fcam').click();
+$('#gal').onclick=()=>$('#fgal').click();
+$('#fcam').onchange=e=>{addFiles(e.target.files);e.target.value=''};
+$('#fgal').onchange=e=>{addFiles(e.target.files);e.target.value=''};
+$('#sigBtn').onclick=()=>$('#fsig').click();
+$('#fsig').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;try{const r=await shrink(f,500,.9);sig=r.d;store.set('lh_sig',sig);await loadSigDim();renderSig();toast('Tanda tangan disimpan')}catch(x){toast('Gagal membaca gambar')}};
+$('#sigDel').onclick=()=>{sig=null;sigDim=null;store.del('lh_sig');renderSig()};
+
+// inputs
+$('#date').onchange=e=>{if(!e.target.value){e.target.value=rep.date;return}rep.date=e.target.value;persist()};
+$('#spk').oninput=e=>{rep.spk=e.target.value;persist()};
+$('#note').oninput=e=>{rep.note=e.target.value;persist()};
+document.querySelectorAll('[data-s]').forEach(i=>i.oninput=()=>{st[i.dataset.s]=i.value;store.set('lh_set',st)});
+$('#addAct').onclick=()=>{rep.acts.push({t:'',n:''});renderActs();persist();const ins=document.querySelectorAll('#acts input[type=text]');ins[ins.length-1].focus()};
+document.querySelectorAll('.seg').forEach(s=>s.onclick=e=>{const b=e.target.closest('button');if(!b)return;rep[s.dataset.k]=b.dataset.v;renderWeather();persist()});
+$('#btnNew').onclick=()=>{if(!confirm('Mulai laporan baru? Isian hari ini dikosongkan (No. SPK tetap).'))return;const spk=rep.spk;rep=blank();rep.spk=spk;init();persist()};
+$('#btnCopy').onclick=()=>{const k=Object.keys(hist).sort().filter(x=>x<rep.date).pop()||Object.keys(hist).sort().pop();if(!k){toast('Belum ada laporan tersimpan');return}rep.acts=hist[k].acts.map(a=>({t:a.t,n:a.n}));renderActs();persist();toast('Aktivitas disalin')};
+function saveLocal(){
+  if(!rep.date){toast('Isi tanggal dulu');return false}
+  rep.u=Date.now();
+  hist[rep.date]=JSON.parse(JSON.stringify(rep));
+  const D=store.get('lh_del',{});if(D[rep.date]){delete D[rep.date];store.set('lh_del',D)}
+  store.set('lh_hist',hist);persist();renderHist();
+  return true;
+}
+$('#save').onclick=()=>{
+  if(!saveLocal())return;
+  if(getCid()&&$('#auto').checked){const d=rep.date;toast('Tersimpan. Mengirim ke Drive…');runDrive(()=>driveSaveCore(d))}
+  else toast(getCid()?'Tersimpan ke rekap':'Tersimpan di HP (Drive belum tersambung)');
+};
+
+// Excel
+const LOGO='data:image/png;base64,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';
+const WID=[6,32,16,16,16,20];
+const px=w=>w*7+5;
+const COLPX=WID.map(px);
+const TOTPX=COLPX.reduce((a,b)=>a+b,0);
+function colAt(x){let c=0;while(c<COLPX.length-1&&x>=COLPX[c]){x-=COLPX[c];c++}return c+x/COLPX[c]}
+const thin={style:'thin',color:{argb:'FF000000'}};
+const BORD={top:thin,left:thin,bottom:thin,right:thin};
+function put(ws,r1,c1,r2,c2,v,o={}){
+  if(r1!==r2||c1!==c2)ws.mergeCells(r1,c1,r2,c2);
+  const c=ws.getCell(r1,c1);c.value=v;
+  c.alignment={vertical:'middle',horizontal:o.h||'left',wrapText:true,indent:o.h?0:0};
+  c.font={name:'Calibri',size:o.sz||11,bold:!!o.b,underline:!!o.u,color:o.col?{argb:o.col}:undefined};
+  if(o.bd!==false)for(let r=r1;r<=r2;r++)for(let k=c1;k<=c2;k++)ws.getCell(r,k).border=BORD;
+}
+function sheetName(wb,base){let n=base,i=2;while(wb.getWorksheet(n))n=base+'-'+(i++);return n}
+function buildDay(wb,R,sg){
+  const f=fmtLong(R.date);
+  const ws=wb.addWorksheet(sheetName(wb,R.date),{pageSetup:{paperSize:9,orientation:'portrait',fitToPage:true,fitToWidth:1,fitToHeight:0,horizontalCentered:true,margins:{left:.4,right:.4,top:.4,bottom:.4,header:.2,footer:.2}}});
+  WID.forEach((w,i)=>ws.getColumn(i+1).width=w);
+  let r=1;
+  put(ws,1,1,2,2,'',{});ws.getRow(1).height=20;ws.getRow(2).height=20;
+  {const lid=wb.addImage({base64:LOGO,extension:'png'});ws.addImage(lid,{tl:{col:colAt((px(WID[0])+px(WID[1])-80)/2),row:0.06},ext:{width:80,height:52},editAs:'oneCell'})}
+  put(ws,1,3,2,4,'LAPORAN HARIAN',{b:1,sz:16,h:'center'});
+  put(ws,1,5,1,5,'No. SPK',{});put(ws,1,6,1,6,': '+R.spk,{b:1});
+  ws.getCell(1,5).border=BORD;
+  put(ws,2,5,2,6,'',{});
+  put(ws,3,1,3,2,'Hari/Tgl :   '+f.hari+'    '+f.tgl,{});
+  put(ws,3,3,3,6,'',{});
+  const L=[['PROJECT',st.project],['Pekerjaan',st.pekerjaan],['Blok',st.blok],['Lokasi',st.lokasi]];
+  const K=[['KONTRAKTOR',st.kontraktor],['Nama',st.knama],['Posisi',st.kposisi],['Perusahaan',st.kperusahaan]];
+  const tot=R.acts.reduce((a,x)=>a+(parseInt(x.n)||0),0);
+  L.forEach((p,i)=>{put(ws,4+i,1,4+i,2,p[0].padEnd(14,' ')+': '+p[1],{b:i===0});put(ws,4+i,3,4+i,3,'',{});put(ws,4+i,4,4+i,4,K[i][0],{b:i===0});put(ws,4+i,5,4+i,6,': '+K[i][1],{b:i===0})});
+  put(ws,8,1,8,3,'',{});put(ws,8,4,8,4,'Jumlah Pekerja',{});put(ws,8,5,8,6,': '+tot+' Orang',{});
+  put(ws,9,1,9,1,'NO',{b:1,h:'center'});put(ws,9,2,9,5,'AKTIVITAS PEKERJAAN',{b:1,h:'center'});put(ws,9,6,9,6,'TENAGA KERJA',{b:1,h:'center'});
+  put(ws,10,1,10,1,'A',{b:1,h:'center'});put(ws,10,2,10,5,(st.pekerjaan||'').toUpperCase(),{b:1});put(ws,10,6,10,6,'',{});
+  r=11;
+  const acts=R.acts.filter(a=>a.t||a.n);
+  acts.forEach((a,i)=>{put(ws,r,1,r,1,i+1,{h:'center'});put(ws,r,2,r,5,a.t,{});put(ws,r,6,r,6,a.n?a.n+' Orang':'',{h:'center'});r++});
+  while(r<15){put(ws,r,1,r,1,'',{});put(ws,r,2,r,5,'',{});put(ws,r,6,r,6,'',{});r++}
+  // photos
+  const P=R.photos;let boxH=0;const pr=r;
+  if(P.length){
+    const cols=P.length===1?1:2;const {bw,bh}=photoBox(P.length);
+    const rows=Math.ceil(P.length/cols);const rowsPer=Math.ceil((bh+10)/20);
+    const total=rows*rowsPer+1;
+    for(let i=0;i<total;i++){ws.getRow(pr+i).height=15;}
+    put(ws,pr,1,pr+total-1,6,'',{});
+    P.forEach((p,i)=>{
+      const cx=i%cols,ry=Math.floor(i/cols);
+      const s=Math.min(bw/p.w,bh/p.h);const w=Math.round(p.w*s),h=Math.round(p.h*s);
+      const alone=cols===2&&i===P.length-1&&P.length%2===1;const x0=(cols===1||alone)?(TOTPX-w)/2:10+cx*(bw+10)+(bw-w)/2;
+      const y0=5+ry*(rowsPer*20)+(bh-h)/2;
+      const id=wb.addImage({base64:p.d,extension:'jpeg'});
+      const tlc=colAt(x0);
+      ws.addImage(id,{tl:{col:tlc,row:pr-1+y0/20},ext:{width:w,height:h},editAs:'oneCell'});
+    });
+    r=pr+total;
+  }else{for(let i=0;i<3;i++){put(ws,r,1,r,6,'',{});r++}}
+  // weather
+  put(ws,r,1,r,2,'Catatan Kendala',{u:1,bd:false});put(ws,r,3,r,4,'Pagi-Siang',{u:1,h:'center',b:1});put(ws,r,5,r,6,'Siang-Sore',{u:1,h:'center',b:1});r++;
+  put(ws,r,1,r,2,'',{});put(ws,r,3,r,3,'Cerah',{h:'center'});put(ws,r,4,r,4,'Hujan',{h:'center'});put(ws,r,5,r,5,'Cerah',{h:'center'});put(ws,r,6,r,6,'Hujan',{h:'center'});r++;
+  const ck='✓';
+  put(ws,r,1,r,2,f.dmy,{});
+  put(ws,r,3,r,3,R.pagi==='cerah'?ck:'',{h:'center',b:1});put(ws,r,4,r,4,R.pagi==='hujan'?ck:'',{h:'center',b:1});
+  put(ws,r,5,r,5,R.sore==='cerah'?ck:'',{h:'center',b:1});put(ws,r,6,r,6,R.sore==='hujan'?ck:'',{h:'center',b:1});r++;
+  put(ws,r,1,r,6,R.note||'',{});r++;
+  for(let i=0;i<2;i++){put(ws,r,1,r,6,'',{});r++}
+  // signature
+  put(ws,r,1,r,3,'Dibuat Oleh,',{h:'center'});put(ws,r,4,r,6,'Diketahui Oleh,',{h:'center'});r++;
+  const sr=r;
+  for(let i=0;i<4;i++){ws.getRow(r+i).height=18}
+  put(ws,r,1,r+3,3,'',{});put(ws,r,4,r+3,6,'',{});
+  if(sg){const id=wb.addImage({base64:sg,extension:sg.startsWith('data:image/png')?'png':'jpeg'});const k=sigDim?Math.min(150/sigDim.w,60/sigDim.h):1;const sw=sigDim?Math.round(sigDim.w*k):150,sh=sigDim?Math.round(sigDim.h*k):60;ws.addImage(id,{tl:{col:0.6,row:sr-1+0.1},ext:{width:sw,height:sh},editAs:'oneCell'})}
+  r+=4;
+  put(ws,r,1,r,3,'Nama : '+st.dnama,{});put(ws,r,4,r,5,'Nama : '+st.k1nama,{});put(ws,r,6,r,6,'Nama : '+st.k2nama,{});r++;
+  put(ws,r,1,r,3,'Jabatan: '+st.djabatan,{});put(ws,r,4,r,5,'Jabatan: '+st.k1jabatan,{});put(ws,r,6,r,6,'Jabatan: '+st.k2jabatan,{});
+  return ws;
+}
+function buildRekap(wb,list){
+  const ws=wb.addWorksheet('Rekap',{views:[{state:'frozen',ySplit:3}]});
+  ws.columns=[{width:5},{width:12},{width:12},{width:34},{width:60},{width:14},{width:14},{width:14},{width:9}];
+  ws.mergeCells('A1:I1');ws.getCell('A1').value='REKAP LAPORAN HARIAN – '+(st.project||'');ws.getCell('A1').font={bold:true,size:14};
+  ws.getCell('A2').value='Total hari: '+list.length;
+  const h=ws.getRow(3);h.values=['No','Hari','Tanggal','No. SPK','Aktivitas','Jumlah Pekerja','Cuaca Pagi-Siang','Cuaca Siang-Sore','Foto'];
+  h.eachCell(c=>{c.font={bold:true,color:{argb:'FFFFFFFF'}};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFC8102E'}};c.alignment={horizontal:'center',vertical:'middle',wrapText:true};c.border=BORD});
+  list.forEach((R,i)=>{
+    const f=fmtLong(R.date);const tot=R.acts.reduce((a,x)=>a+(parseInt(x.n)||0),0);
+    const txt=R.acts.filter(a=>a.t).map(a=>'• '+a.t+(a.n?' ('+a.n+')':'')).join('\n');
+    const row=ws.addRow([i+1,f.hari,f.tgl,R.spk,txt,tot,R.pagi==='cerah'?'Cerah':'Hujan',R.sore==='cerah'?'Cerah':'Hujan',R.photos.length]);
+    row.eachCell((c,k)=>{c.border=BORD;c.alignment={vertical:'top',wrapText:true,horizontal:[1,6,7,8,9].includes(k)?'center':'left'}});
+  });
+  const last=ws.rowCount+1;
+  ws.getCell('E'+last).value='Rata-rata pekerja / hari';ws.getCell('E'+last).font={bold:true};ws.getCell('E'+last).alignment={horizontal:'right'};
+  ws.getCell('F'+last).value={formula:'IFERROR(ROUND(AVERAGE(F4:F'+(last-1)+'),1),0)'};ws.getCell('F'+last).font={bold:true};ws.getCell('F'+last).alignment={horizontal:'center'};
+  const l2=last+1;
+  ws.getCell('E'+l2).value='Jumlah hari hujan (pagi atau sore)';ws.getCell('E'+l2).font={bold:true};ws.getCell('E'+l2).alignment={horizontal:'right'};
+  ws.getCell('F'+l2).value={formula:'SUMPRODUCT(--((G4:G'+(last-1)+'="Hujan")+(H4:H'+(last-1)+'="Hujan")>0))'};ws.getCell('F'+l2).font={bold:true};ws.getCell('F'+l2).alignment={horizontal:'center'};
+}
+function photoBox(n){return n===1?{bw:TOTPX-20,bh:300}:{bw:Math.floor((TOTPX-30)/2),bh:230}}
+function cropCover(d,bw,bh){
+  return new Promise(res=>{const im=new Image();im.onload=()=>{
+    const W=bw*2,H=bh*2;const c=document.createElement('canvas');c.width=W;c.height=H;
+    const s=Math.max(W/im.width,H/im.height);const w=im.width*s,h=im.height*s;
+    const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,W,H);x.drawImage(im,(W-w)/2,(H-h)/2,w,h);
+    res({d:c.toDataURL('image/jpeg',.8),w:bw,h:bh})};
+    im.onerror=()=>res(null);im.src=d})
+}
+async function withCrops(R){
+  const n=R.photos.length;if(!n)return R;
+  const {bw,bh}=photoBox(n);const out=[];
+  for(const p of R.photos){const c=await cropCover(p.d,bw,bh);if(c)out.push(c)}
+  return {...R,photos:out};
+}
+async function save(wb,name){
+  const buf=await wb.xlsx.writeBuffer();
+  const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  let d=null;try{if(typeof claude!=='undefined')d=await claude.use('downloads')}catch(e){}
+  if(d){try{await d.save({filename:name,data:blob});toast('Siap disimpan');return}catch(e){if(e&&e.code==='declined')return;}}
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.append(a);a.click();a.remove();
+}
+$('#dl').onclick=async()=>{
+  if(typeof ExcelJS==='undefined'){toast('Library Excel belum termuat. Cek internet.');return}
+  try{const wb=new ExcelJS.Workbook();buildDay(wb,await withCrops(rep),sig);await save(wb,'Laporan Harian '+rep.date+'.xlsx')}catch(e){console.error(e);toast('Gagal membuat Excel')}
+};
+$('#dlRekap').onclick=async()=>{
+  if(typeof ExcelJS==='undefined'){toast('Library Excel belum termuat. Cek internet.');return}
+  const copy={...hist};copy[rep.date]=copy[rep.date]||rep;
+  const keys=Object.keys(copy).sort();
+  if(!keys.length){toast('Belum ada laporan');return}
+  try{const wb=new ExcelJS.Workbook();const list=keys.map(k=>copy[k]);buildRekap(wb,list);buildPeriods(wb,list);for(const R of list)buildDay(wb,await withCrops(R),sig);await save(wb,'Rekap Laporan Harian '+keys[0]+' sd '+keys[keys.length-1]+'.xlsx')}catch(e){console.error(e);toast('Gagal membuat rekap')}
+};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function previewHTML(){
+  const R=rep,f=fmtLong(R.date),tot=total(),ck='✓';
+  const acts=R.acts.filter(a=>a.t||a.n);
+  const td=(s,cs,cl,rs)=>'<td'+(cs>1?' colspan="'+cs+'"':'')+(rs>1?' rowspan="'+rs+'"':'')+(cl?' class="'+cl+'"':'')+'>'+s+'</td>';
+  let h='<table><colgroup>'+WID.map(w=>'<col style="width:'+(w/106*100)+'%">').join('')+'</colgroup>';
+  h+='<tr>'+td('<img src="'+LOGO+'" style="height:44px" alt="SGD">',2,'c',2)+td('<span style="font-size:15px">LAPORAN HARIAN</span>',2,'c b',2)+td('No. SPK')+td(': <b>'+esc(R.spk)+'</b>')+'</tr>';
+  h+='<tr>'+td('',2)+'</tr>';
+  h+='<tr>'+td('Hari/Tgl :&nbsp; '+f.hari+' &nbsp; '+f.tgl,2)+td('',4)+'</tr>';
+  const L=[['PROJECT',st.project],['Pekerjaan',st.pekerjaan],['Blok',st.blok],['Lokasi',st.lokasi]];
+  const K=[['KONTRAKTOR',st.kontraktor],['Nama',st.knama],['Posisi',st.kposisi],['Perusahaan',st.kperusahaan]];
+  L.forEach((p,i)=>{const b=i===0?'b':'';h+='<tr>'+td(p[0]+' : '+esc(p[1]),2,b)+td('')+td(K[i][0],1,b)+td(': '+esc(K[i][1]),2,b)+'</tr>'});
+  h+='<tr>'+td('',3)+td('Jumlah Pekerja')+td(': '+tot+' Orang',2)+'</tr>';
+  h+='<tr>'+td('NO',1,'c b')+td('AKTIVITAS PEKERJAAN',4,'c b')+td('TENAGA KERJA',1,'c b')+'</tr>';
+  h+='<tr>'+td('A',1,'c b')+td(esc((st.pekerjaan||'').toUpperCase()),4,'b')+td('')+'</tr>';
+  const n=Math.max(4,acts.length);
+  for(let i=0;i<n;i++){const a=acts[i];h+='<tr>'+td(a?i+1:'',1,'c')+td(a?esc(a.t):'',4)+td(a&&a.n?esc(a.n)+' Orang':'',1,'c')+'</tr>'}
+  const one=R.photos.length===1;
+  h+='<tr>'+td(R.photos.length?'<div class="ph2">'+R.photos.map(p=>'<img src="'+p.d+'" style="width:'+(one?'98%':'48.5%')+';aspect-ratio:'+(one?'752/300':'371/230')+';object-fit:cover" alt="Foto">').join('')+'</div>':'<div style="height:50px;color:#999;text-align:center;padding-top:14px">(belum ada foto)</div>',6)+'</tr>';
+  h+='<tr>'+td('<span class="u">Catatan Kendala</span>',2)+td('<u>Pagi-Siang</u>',2,'c b')+td('<u>Siang-Sore</u>',2,'c b')+'</tr>';
+  h+='<tr>'+td('',2)+td('Cerah',1,'c')+td('Hujan',1,'c')+td('Cerah',1,'c')+td('Hujan',1,'c')+'</tr>';
+  h+='<tr>'+td(f.dmy,2)+td(R.pagi==='cerah'?ck:'',1,'c b')+td(R.pagi==='hujan'?ck:'',1,'c b')+td(R.sore==='cerah'?ck:'',1,'c b')+td(R.sore==='hujan'?ck:'',1,'c b')+'</tr>';
+  h+='<tr>'+td(esc(R.note||''),6)+'</tr><tr>'+td('',6)+'</tr><tr>'+td('',6)+'</tr>';
+  h+='<tr>'+td('Dibuat Oleh,',3,'c')+td('Diketahui Oleh,',3,'c')+'</tr>';
+  h+='<tr>'+td(sig?'<img src="'+sig+'" style="background:#fff" alt="TTD">':'',3,'sg')+td('',3,'sg')+'</tr>';
+  h+='<tr>'+td('Nama : '+esc(st.dnama),3)+td('Nama : '+esc(st.k1nama),2)+td('Nama : '+esc(st.k2nama),1)+'</tr>';
+  h+='<tr>'+td('Jabatan: '+esc(st.djabatan),3)+td('Jabatan: '+esc(st.k1jabatan),2)+td('Jabatan: '+esc(st.k2jabatan),1)+'</tr>';
+  return h+'</table>';
+}
+$('#pvBtn').onclick=()=>{$('#pv').innerHTML=previewHTML();$('#modal').classList.add('on');$('#modal .bd').scrollTop=0};
+$('#pvClose').onclick=()=>$('#modal').classList.remove('on');
+$('#pvDl').onclick=()=>$('#dl').click();
+
+// ===== Rekap otomatis mingguan / bulanan =====
+const BLN=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const MON=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const iso2=s=>{const p=s.split('-');return p[2]+' '+BLN[+p[1]-1]+' '+p[0]};
+function addDays(s,n){const d=new Date(s+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)}
+function addMonths(s,n){return new Date(Date.UTC(+s.slice(0,4),+s.slice(5,7)-1+n,1)).toISOString().slice(0,10)}
+function weekStart(s){return addDays(s,-((new Date(s+'T00:00:00Z').getUTCDay()+6)%7))}
+function monthEnd(s){return new Date(Date.UTC(+s.slice(0,4),+s.slice(5,7),0)).toISOString().slice(0,10)}
+const wkLabel=a=>iso2(a).slice(0,-5)+' \u2013 '+iso2(addDays(a,6));
+const moLabel=k=>MON[+k.slice(5,7)-1]+' '+k.slice(0,4);
+function summarize(list){
+  let tot=0,rain=0,ph=0,max=0;const am=new Map();
+  list.forEach(R=>{
+    const t=R.acts.reduce((a,x)=>a+(parseInt(x.n)||0),0);tot+=t;max=Math.max(max,t);
+    if(R.pagi==='hujan'||R.sore==='hujan')rain++;ph+=R.photos.length;
+    const seen=new Set();
+    R.acts.forEach(a=>{const nm=(a.t||'').trim();if(!nm)return;const k=nm.toLowerCase();const o=am.get(k)||{name:nm,days:0,mh:0};if(!seen.has(k)){o.days++;seen.add(k)}o.mh+=parseInt(a.n)||0;am.set(k,o)});
+  });
+  return {days:list.length,tot,avg:list.length?Math.round(tot/list.length*10)/10:0,max,rain,ph,acts:[...am.values()].sort((a,b)=>b.mh-a.mh)};
+}
+function hdrRow(ws,row,vals){const r=ws.getRow(row);r.values=vals;r.eachCell(c=>{c.font={bold:true,color:{argb:'FFFFFFFF'}};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFC8102E'}};c.alignment={horizontal:'center',vertical:'middle',wrapText:true};c.border=BORD})}
+function bodyRow(ws,vals,center){const r=ws.addRow(vals);r.eachCell((c,k)=>{c.border=BORD;c.alignment={vertical:'top',wrapText:true,horizontal:center.includes(k)?'center':'left'}})}
+function genPeriodSheets(wb,sheetName,actName,groups,title){
+  const ws=wb.addWorksheet(sheetName);ws.columns=[{width:26},{width:12},{width:18},{width:16},{width:12},{width:10}];
+  ws.mergeCells('A1:F1');ws.getCell('A1').value=title;ws.getCell('A1').font={bold:true,size:14};
+  hdrRow(ws,3,['Periode','Hari lapor','Total orang-hari','Rata-rata / hari','Hari hujan','Foto']);
+  const wa=wb.addWorksheet(actName);wa.columns=[{width:26},{width:50},{width:10},{width:16}];
+  wa.mergeCells('A1:D1');wa.getCell('A1').value=title+' \u2013 rincian aktivitas';wa.getCell('A1').font={bold:true,size:14};
+  hdrRow(wa,3,['Periode','Aktivitas','Hari','Orang-hari']);
+  groups.forEach(g=>{const S=summarize(g.list);bodyRow(ws,[g.label,S.days,S.tot,S.avg,S.rain,S.ph],[2,3,4,5,6]);S.acts.forEach(a=>bodyRow(wa,[g.label,a.name,a.days,a.mh],[3,4]))});
+  const n=groups.length;
+  if(n){const t=ws.addRow(['TOTAL',{formula:'SUM(B4:B'+(3+n)+')'},{formula:'SUM(C4:C'+(3+n)+')'},{formula:'IFERROR(ROUND(C'+(4+n)+'/B'+(4+n)+',1),0)'},{formula:'SUM(E4:E'+(3+n)+')'},{formula:'SUM(F4:F'+(3+n)+')'}]);t.eachCell((c,k)=>{c.font={bold:true};c.border=BORD;c.alignment={horizontal:k===1?'left':'center'}})}
+}
+function grp(list,keyFn,labelFn){const m=new Map();list.forEach(R=>{const k=keyFn(R.date);if(!m.has(k))m.set(k,[]);m.get(k).push(R)});return [...m.keys()].sort().map(k=>({label:labelFn(k),list:m.get(k)}))}
+function buildPeriods(wb,list){
+  genPeriodSheets(wb,'Per Minggu','Aktivitas Mingguan',grp(list,weekStart,wkLabel),'REKAP MINGGUAN \u2013 '+st.project);
+  genPeriodSheets(wb,'Per Bulan','Aktivitas Bulanan',grp(list,d=>d.slice(0,7),moLabel),'REKAP BULANAN \u2013 '+st.project);
+}
+let perMode='w',perRef=today();
+function perRange(){
+  if(perMode==='w'){const a=weekStart(perRef);return {a,b:addDays(a,6),label:wkLabel(a)}}
+  const a=perRef.slice(0,7)+'-01';return {a,b:monthEnd(a),label:moLabel(a)};
+}
+const repsIn=(a,b)=>Object.keys(hist).sort().filter(k=>k>=a&&k<=b).map(k=>hist[k]);
+function renderPer(){
+  const r=perRange(),L=repsIn(r.a,r.b),S=summarize(L);
+  $('#perLbl').textContent=r.label;
+  $('#perW').classList.toggle('on',perMode==='w');$('#perM').classList.toggle('on',perMode==='m');
+  if(!L.length){$('#perSum').innerHTML='<small style="color:var(--mut)">Belum ada laporan tersimpan pada periode ini.</small>';return}
+  let h='<div class="pgrid"><div class="pbox"><b>'+S.days+'</b><span>hari lapor</span></div><div class="pbox"><b>'+S.tot+'</b><span>total orang-hari</span></div><div class="pbox"><b>'+S.avg+'</b><span>rata-rata pekerja / hari</span></div><div class="pbox"><b>'+S.rain+'</b><span>hari hujan</span></div></div>';
+  h+='<table class="ptab"><tr><th>Aktivitas</th><th>Hari</th><th>Orang-hari</th></tr>'+S.acts.map(a=>'<tr><td>'+esc(a.name)+'</td><td>'+a.days+'</td><td>'+a.mh+'</td></tr>').join('')+'</table>';
+  $('#perSum').innerHTML=h;
+}
+$('#perW').onclick=()=>{perMode='w';renderPer()};
+$('#perM').onclick=()=>{perMode='m';renderPer()};
+$('#perPrev').onclick=()=>{perRef=perMode==='w'?addDays(perRef,-7):addMonths(perRef,-1);renderPer()};
+$('#perNext').onclick=()=>{perRef=perMode==='w'?addDays(perRef,7):addMonths(perRef,1);renderPer()};
+$('#perDl').onclick=async()=>{
+  if(typeof ExcelJS==='undefined'){toast('Library Excel belum termuat. Cek internet.');return}
+  const r=perRange(),L=repsIn(r.a,r.b);
+  if(!L.length){toast('Belum ada laporan pada periode ini');return}
+  try{
+    const wb=new ExcelJS.Workbook();const w=perMode==='w';
+    genPeriodSheets(wb,'Ringkasan','Rincian Aktivitas',[{label:r.label,list:L}],(w?'REKAP MINGGUAN':'REKAP BULANAN')+' \u2013 '+st.project+' \u2013 '+r.label);
+    buildRekap(wb,L);
+    for(const R of L)buildDay(wb,await withCrops(R),sig);
+    await save(wb,w?'Rekap Mingguan '+r.a+' sd '+r.b+'.xlsx':'Rekap Bulanan '+r.a.slice(0,7)+'.xlsx');
+  }catch(e){console.error(e);toast('Gagal membuat rekap periode')}
+};
+
+
+// ===== Google Drive sebagai database (REST API + Google Identity Services) =====
+// Drive = sumber data utama. HP hanya cache lokal; sinkron dua arah per tanggal (data-YYYY-MM-DD.json).
+const DEFAULT_CLIENT_ID='';   // opsional: isi Client ID di sini sebelum hosting, jadi HP tidak perlu mengetik
+const FOLDER='Laporan Harian S Walk',XMIME='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',SCOPE='https://www.googleapis.com/auth/drive.file';
+const API='https://www.googleapis.com/drive/v3/files',UPL='https://www.googleapis.com/upload/drive/v3/files';
+let tok=null,tokExp=0,tclient=null,tclientId='',tkRes=null,tkRej=null,folderId=null,silentTok=false,drvN=0,drvChain=Promise.resolve();
+const enc=encodeURIComponent;
+const getCid=()=>($('#cid').value||'').trim();
+const setStat=m=>{$('#drvStat').textContent=m;$('#topStat').textContent=m};
+const hhmm=()=>new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+const qs=s=>String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+function gerr(code,msg){const e=new Error(msg||code);e.code=code;return e}
+
+function gisReady(){return new Promise((res,rej)=>{const t0=Date.now();(function w(){if(window.google&&google.accounts&&google.accounts.oauth2)return res();if(Date.now()-t0>10000)return rej(gerr('no_gis'));setTimeout(w,250)})()})}
+async function token(){
+  const cid=getCid();
+  if(!cid)throw gerr('no_client');
+  if(tok&&Date.now()<tokExp)return tok;
+  if(!navigator.onLine)throw gerr('offline');
+  await gisReady();
+  if(!tclient||tclientId!==cid){
+    tclientId=cid;
+    tclient=google.accounts.oauth2.initTokenClient({client_id:cid,scope:SCOPE,
+      callback:r=>{const a=tkRes,b=tkRej;tkRes=tkRej=null;
+        if(r&&r.access_token){tok=r.access_token;tokExp=Date.now()+((+r.expires_in||3600)-60)*1000;store.set('lh_hint',1);a&&a(tok)}
+        else b&&b(gerr('needs_reauth',(r&&(r.error_description||r.error))||'auth'))},
+      error_callback:x=>{const b=tkRej;tkRes=tkRej=null;b&&b(gerr('needs_reauth',(x&&x.type)||'popup'))}});
+  }
+  return new Promise((res,rej)=>{
+    let done=false,to;
+    const fin=(f,v)=>{if(done)return;done=true;clearTimeout(to);f(v)};
+    to=setTimeout(()=>{tkRes=tkRej=null;fin(rej,gerr('needs_reauth','timeout'))},120000);
+    tkRes=v=>fin(res,v);tkRej=e=>fin(rej,e);
+    try{tclient.requestAccessToken({prompt:silentTok?'none':''})}catch(e){tkRes=tkRej=null;fin(rej,gerr('needs_reauth','popup'))}
+  });
+}
+async function gfetch(url,opt={}){
+  for(let a=0;a<2;a++){
+    const t=await token();
+    let r;
+    try{r=await fetch(url,{...opt,headers:{...(opt.headers||{}),Authorization:'Bearer '+t}})}catch(e){throw gerr('offline')}
+    if(r.status===401&&a===0){tok=null;tokExp=0;continue}
+    if(!r.ok){let m='';try{m=(await r.json()).error.message}catch(e){}throw gerr(r.status===401?'needs_reauth':'http_'+r.status,m||('HTTP '+r.status))}
+    return r;
+  }
+  throw gerr('needs_reauth');
+}
+async function dList(q,fields,order){
+  const base=API+'?q='+enc(q+' and trashed = false')+'&fields='+enc('nextPageToken,'+fields)+'&pageSize=200'+(order?'&orderBy='+order:'');
+  let all=[],pt='';
+  do{const r=await gfetch(base+(pt?'&pageToken='+enc(pt):''));const j=await r.json();all=all.concat(j.files||[]);pt=j.nextPageToken||''}while(pt);
+  return all;
+}
+async function dTrash(id){await gfetch(API+'/'+enc(id),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({trashed:true})})}
+async function ensureFolder(){
+  if(folderId)return folderId;
+  const l=await dList("name = '"+qs(FOLDER)+"' and mimeType = 'application/vnd.google-apps.folder'",'files(id,name)','createdTime');
+  if(l[0]){folderId=l[0].id;return folderId}
+  const r=await gfetch(API+'?fields=id',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:FOLDER,mimeType:'application/vnd.google-apps.folder'})});
+  const j=await r.json();if(!j.id)throw new Error('Folder tidak terbuat');
+  folderId=j.id;return folderId;
+}
+async function dUpload(folder,name,blob,mime,existingId){
+  const meta=existingId?{name}:{name,parents:[folder]};
+  const B='lhb'+Date.now()+Math.random().toString(36).slice(2);
+  const body=new Blob(['--'+B+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+JSON.stringify(meta)+'\r\n--'+B+'\r\nContent-Type: '+mime+'\r\n\r\n',blob,'\r\n--'+B+'--']);
+  const r=await gfetch(UPL+(existingId?'/'+enc(existingId):'')+'?uploadType=multipart&fields=id,modifiedTime',{method:existingId?'PATCH':'POST',headers:{'Content-Type':'multipart/related; boundary='+B},body});
+  const j=await r.json();if(!j.id)throw new Error('Upload gagal: '+name);
+  return j;
+}
+async function putFile(folder,name,blob,mime){
+  const old=await dList("'"+folder+"' in parents and name = '"+qs(name)+"'",'files(id)','createdTime');
+  const made=await dUpload(folder,name,blob,mime,old[0]&&old[0].id);
+  for(const f of old.slice(1)){try{await dTrash(f.id)}catch(e){}}
+  return made;
+}
+
+function drvErr(e){
+  const c=e&&e.code,m=(e&&e.message)||'';
+  if(c==='no_client')return 'Isi Google Client ID dulu (lihat README).';
+  if(c==='no_gis')return 'Skrip login Google belum termuat. Cek internet lalu coba lagi.';
+  if(c==='offline')return 'Tidak ada koneksi internet. Data aman di HP, sinkron lagi saat online.';
+  if(c==='needs_reauth'){
+    if(/popup/.test(m)&&!/closed/.test(m))return 'Popup login Google diblokir browser. Izinkan popup lalu tekan Sinkron lagi.';
+    return 'Login Google dibatalkan atau kedaluwarsa. Tekan Sinkron lalu izinkan.';
+  }
+  if(c==='http_403')return 'Akses Drive ditolak ('+m+'). Pastikan Google Drive API sudah Enable dan emailmu ada di Test users.';
+  if(c==='http_404')return 'File/folder Drive tidak ditemukan. Coba Sinkron lagi.';
+  return 'Gagal: '+(m||'tidak diketahui');
+}
+const busyUI=()=>['#drvSave','#drvLoad','#drvRekap','#topSync'].forEach(s=>{$(s).disabled=drvN>0});
+// semua operasi Drive dijalankan berurutan supaya tidak saling menimpa
+function runDrive(fn,o={}){
+  const job=drvChain.then(async()=>{
+    drvN++;busyUI();silentTok=!!o.silent;
+    try{return await fn()}
+    catch(e){
+      console.error(e);if(e&&e.code==='http_404')folderId=null;
+      if(o.silent&&e&&e.code==='needs_reauth')setStat('Ketuk “Sinkron” untuk menyambungkan Drive.');
+      else{setStat(drvErr(e));if(!o.silent)toast('Drive gagal. Data tetap aman di HP.')}
+      return null;
+    }finally{silentTok=false;drvN--;busyUI()}
+  });
+  drvChain=job;return job;
+}
+function guard(){
+  if(getCid())return true;
+  $('#drv').scrollIntoView({behavior:'smooth'});setStat('Isi Google Client ID dulu (lihat README).');toast('Isi Google Client ID dulu');return false;
+}
+
+// ---- sinkron dua arah ----
+async function syncCore(quiet){
+  setStat('Menghubungkan ke Drive…');
+  const folder=await ensureFolder();
+  setStat('Membaca data di Drive…');
+  const files=(await dList("'"+folder+"' in parents and name contains 'data'",'files(id,name,modifiedTime)','modifiedTime')).filter(f=>/^data-\d{4}-\d{2}-\d{2}\.json$/.test(f.name));
+  const remote={},allBy={};
+  files.forEach(f=>{const d=f.name.slice(5,15);remote[d]=f;(allBy[d]=allBy[d]||[]).push(f)});
+  const M=store.get('lh_sync',{}),D=store.get('lh_del',{});
+  let up=0,down=0,fail=0;
+  try{
+    // 1. laporan yang dihapus di HP ini -> hapus juga di Drive
+    for(const d of Object.keys(D)){
+      try{
+        for(const f of allBy[d]||[])await dTrash(f.id);
+        delete remote[d];delete allBy[d];
+        for(const f of await dList("'"+folder+"' in parents and name = 'Laporan Harian "+d+".xlsx'",'files(id)'))await dTrash(f.id);
+        delete D[d];delete M[d];
+      }catch(e){if(e&&(e.code==='needs_reauth'||e.code==='offline'))throw e}
+    }
+    const sameFolder=store.get('lh_fid')===folder;   // folder sama dengan sinkron sebelumnya -> file yang hilang berarti memang dihapus
+    const dates=[...new Set([...Object.keys(hist),...Object.keys(remote)])].sort();
+    const upOne=async d=>{
+      const L=hist[d];if(!L.u)L.u=Date.now();
+      const R=remote[d];
+      const blob=new Blob([JSON.stringify({v:2,report:L})],{type:'application/json'});
+      const made=await dUpload(folder,'data-'+d+'.json',blob,'application/json',R&&R.id);
+      M[d]={id:made.id,mt:made.modifiedTime,lu:L.u};up++;
+    };
+    const gone=[];
+    for(let i=0;i<dates.length;i++){
+      const d=dates[i],L=hist[d],R=remote[d],m=M[d];
+      let dir=null;
+      if(L&&!R){if(m&&sameFolder)gone.push(d);else dir='up'}
+      else if(R&&!L)dir='down';
+      else{
+        const rCh=!m||m.mt!==R.modifiedTime,lCh=!m||(L.u||0)>m.lu;
+        if(rCh&&!lCh)dir='down';else if(lCh&&!rCh)dir='up';
+        else if(rCh&&lCh)dir=((L.u||0)>=Date.parse(R.modifiedTime))?'up':'down';
+      }
+      if(!dir)continue;
+      setStat('Sinkron '+(i+1)+' / '+dates.length+'…');
+      try{
+        if(dir==='up')await upOne(d);
+        else{
+          const r=await gfetch(API+'/'+enc(R.id)+'?alt=media');const o=await r.json();
+          const x=o&&o.report;if(!x||!x.date){fail++;continue}
+          x.date=d;x.acts=x.acts||[];x.photos=x.photos||[];x.u=x.u||Date.parse(R.modifiedTime);
+          hist[d]=x;M[d]={id:R.id,mt:R.modifiedTime,lu:x.u};down++;
+        }
+      }catch(e){if(e&&(e.code==='needs_reauth'||e.code==='offline'))throw e;console.error(e);fail++}
+    }
+    // 2. laporan yang sudah hilang dari Drive (dihapus di perangkat lain)
+    if(gone.length&&!quiet){
+      if(confirm(gone.length+' laporan sudah dihapus di Drive/perangkat lain. Hapus juga dari HP ini?\n\nPilih Batal untuk mengunggah ulang dari HP ini.')){gone.forEach(d=>{delete hist[d];delete M[d]})}
+      else{for(const d of gone){try{await upOne(d)}catch(e){fail++}}}
+    }
+  }finally{
+    store.set('lh_hist',hist);store.set('lh_sync',M);store.set('lh_del',D);store.set('lh_fid',folder);renderHist();
+  }
+  const msg='Sinkron selesai pukul '+hhmm()+' · '+up+' diunggah, '+down+' diunduh'+(fail?', '+fail+' gagal':'')+'.';
+  setStat(msg);if(!quiet)toast(fail?'Sinkron selesai, ada yang gagal':'Sinkron selesai');
+  return {up,down,fail};
+}
+// tombol Simpan: sinkron data + unggah Excel hari itu
+async function driveSaveCore(date){
+  if(typeof ExcelJS==='undefined')throw new Error('Library Excel belum termuat');
+  await syncCore(true);
+  const R=hist[date];if(!R)return;
+  setStat('Membuat dan mengunggah Excel…');
+  const wb=new ExcelJS.Workbook();buildDay(wb,await withCrops(R),sig);
+  const buf=await wb.xlsx.writeBuffer();
+  const folder=await ensureFolder();
+  await putFile(folder,'Laporan Harian '+date+'.xlsx',new Blob([buf],{type:XMIME}),XMIME);
+  setStat('Tersimpan di Drive pukul '+hhmm()+' (data + Excel).');toast('Tersimpan di Google Drive');
+}
+async function driveRekap(){
+  if(typeof ExcelJS==='undefined')throw new Error('Library Excel belum termuat');
+  const folder=await ensureFolder();
+  const copy={...hist};if(rep.date&&!copy[rep.date])copy[rep.date]=rep;
+  const keys=Object.keys(copy).sort();
+  if(!keys.length){setStat('Belum ada laporan.');return}
+  setStat('Membuat rekap…');
+  const wb=new ExcelJS.Workbook();const list=keys.map(k=>copy[k]);buildRekap(wb,list);buildPeriods(wb,list);
+  for(const R of list)buildDay(wb,await withCrops(R),sig);
+  const buf=await wb.xlsx.writeBuffer();
+  setStat('Mengunggah rekap…');
+  await putFile(folder,'Rekap Laporan Harian.xlsx',new Blob([buf],{type:XMIME}),XMIME);
+  setStat('Rekap terunggah ('+keys.length+' hari).');toast('Rekap tersimpan di Drive');
+}
+
+$('#cid').oninput=e=>{store.set('lh_cid',e.target.value.trim());tok=null;tokExp=0;tclient=null;folderId=null};
+$('#auto').onchange=e=>store.set('lh_auto',e.target.checked);
+$('#drvSave').onclick=()=>{if(!guard()||!saveLocal())return;const d=rep.date;runDrive(()=>driveSaveCore(d))};
+$('#drvLoad').onclick=()=>{if(guard())runDrive(()=>syncCore(false))};
+$('#topSync').onclick=()=>{if(guard())runDrive(()=>syncCore(false))};
+$('#drvRekap').onclick=()=>{if(guard())runDrive(driveRekap)};
+
+async function boot(){
+  await loadStore();
+  st=Object.assign({},DEF,store.get('lh_set',{}));
+  sig=store.get('lh_sig',null);
+  hist=store.get('lh_hist',{});
+  rep=store.get('lh_draft',null)||blank();
+  if(!rep.acts||!rep.acts.length)rep.acts=[{t:'',n:''}];
+  if(!rep.photos)rep.photos=[];
+  // Client ID bisa dikirim lewat alamat: https://situsmu/?cid=xxxx.apps.googleusercontent.com (sekali per HP)
+  const q=new URLSearchParams(location.search).get('cid');
+  if(q){store.set('lh_cid',q.trim());try{history.replaceState(null,'',location.pathname)}catch(e){}}
+  $('#cid').value=store.get('lh_cid','')||DEFAULT_CLIENT_ID;
+  $('#auto').checked=store.get('lh_auto',true);
+  await loadSigDim();
+  init();
+  if(!getCid())setStat('Drive belum tersambung. Isi Google Client ID di kartu “Rekap tersimpan” (lihat README).');
+  else{
+    setStat('Drive siap. Tekan Sinkron untuk memuat/menyimpan data.');
+    if($('#auto').checked&&store.get('lh_hint')&&navigator.onLine)runDrive(()=>syncCore(true),{silent:true});
+  }
+}
+
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+boot();
+</script>
+</body>
+</html>
